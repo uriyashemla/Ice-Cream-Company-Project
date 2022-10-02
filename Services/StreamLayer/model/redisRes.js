@@ -1,45 +1,15 @@
-var express = require('express');
-var app = require('express')();
-var server = require('http').Server(app);
-var redis = require('redis');
-var redisClient = redis.createClient();
-var sub = redis.createClient()
+const redis = require('redis');
 
-redisClient.subscribe('message'); 
+(async () => {
 
-app.get('/', (req, res) => res.send('Hello World!'))
+  const client = redis.createClient();
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
+  const subscriber = client.duplicate();
 
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
+  await subscriber.connect();
 
+  await subscriber.subscribe('article', (message) => {
+    console.log(message); // 'message'
+  });
 
-redisClient.on("message", function (channel, data) {
-    var data = JSON.parse(data);
-    // do things with the data
-    data.variable1 = 3;
-    data.variable2 = "hello";
-    console.log(data.message);
-});
-
-redisClient.on('connect', function() {
-    console.log('Reciver connected to Redis');
-});
-
-
-server.listen(6061, function() {
-    console.log('reciver is running on port 6061');
-});
-
+})();

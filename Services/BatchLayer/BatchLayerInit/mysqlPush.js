@@ -7,11 +7,6 @@ var connection = mysql.createConnection({
   password : 'root'
 });
 
-
-var storesArray = 
-  
-
-  
 connection.connect(async function(err) {
   if (err) {
     console.error('error connecting: ' + err.stack);
