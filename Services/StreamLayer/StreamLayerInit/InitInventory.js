@@ -1,21 +1,53 @@
-const Redis = require("redis");
+const redis = require('redis');
+const publisher = redis.createClient();
+const obj = {
+    'Chocolate':10000, 
+    'Vanilla':10000,
+    'Strawberry':10000,
+    'Lemon':10000,
+    'Halva':10000
+}
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  database : 'storesdb',
+  user     : 'root',
+  password : 'root'
+});
+
+var sql = `SELECT cityName FROM storesdb.stores_info;`;
+
+
+publisher.on('connect', function () {
+    console.log('connected');
+
+});
+
+publisher.connect();
 
 
 
-redis
-    .on("connect", function () {
-        console.log("Reciever connected to Redis at: " + process.env.REDIS_URL);
-    })
-    .on("error", function (err) {
-        console.log("Error " + err);
-    });
-
-(async () => {
-    await redis.connect();
-    const exist1 = await redis.exists("calls_data");
-    if (exist1) {
-        console.log("exist:", await redis.json.GET("calls_data"));
-    } else {
-        console.log("Creating:");
+connection.connect(async function(err) {
+    if (err) {
+      console.error('error connecting: ' + err.stack);
+      return;
     }
-})();
+   
+     console.log('connected as id ' + connection.threadId);
+  
+        connection.query(sql, function(err,res) {
+            if (err) throw err;
+            res.forEach(async (element) => {
+                await publisher.set(`${element.cityName}`, JSON.stringify(obj));
+                const value = await publisher.get(`${element.cityName}`);
+
+
+                console.log(value);
+
+            })
+        });  
+    
+    
+  });
+
+
