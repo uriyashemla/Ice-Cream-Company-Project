@@ -20,34 +20,34 @@ var sql = `SELECT cityName FROM storesdb.stores_info;`;
 
 publisher.on('connect', function () {
     console.log('connected');
-
 });
 
 publisher.connect();
+// publisher.flushAll();
 
-
+    
 
 connection.connect(async function(err) {
     if (err) {
       console.error('error connecting: ' + err.stack);
       return;
     }
-   
      console.log('connected as id ' + connection.threadId);
-  
-        connection.query(sql, function(err,res) {
+     const exist = await publisher.exists("אשדוד");
+      if (exist) {
+        console.log("db already exist");
+      }
+      else{
+         connection.query(sql, function(err,res) {
             if (err) throw err;
             res.forEach(async (element) => {
                 await publisher.set(`${element.cityName}`, JSON.stringify(obj));
-                const value = await publisher.get(`${element.cityName}`);
+                const value = await publisher.get(`אשדוד`);
 
-
-                console.log(value);
-
+                //console.log(value);
             })
         });  
-    
-    
+      }  
   });
 
-
+  module.exports.publisher = publisher;
