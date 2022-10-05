@@ -12,4 +12,6 @@ const updateInventory = (async (req,res) => {
     // await db.publisher.set(`${element.cityName}`,newValue);
 });
 
-updateInventory();
+module.exports = {
+    updateInventory
+};
