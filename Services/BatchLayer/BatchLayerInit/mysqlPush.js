@@ -15,8 +15,6 @@ connection.connect(async function(err) {
  
    console.log('connected as id ' + connection.threadId);
 
-  var values = []
-
   try{
     let stores = await InitStores()
     stores.forEach((element)=>{
