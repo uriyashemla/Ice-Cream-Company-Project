@@ -2,7 +2,7 @@ require("dotenv/config")
 
 module.exports = {
     "group.id": "cloudkarafka-example",
-    "metadata.broker.list": process.env.KAFKA_BROKERS.split(","),
+    "metadata.broker.list": `${process.env.KAFKA_BROKERS}`.split(","),
     "socket.keepalive.enable": true,
     "security.protocol": "SASL_SSL",
     "sasl.mechanisms": "SCRAM-SHA-256",

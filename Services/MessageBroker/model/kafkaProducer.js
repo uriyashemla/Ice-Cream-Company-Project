@@ -1,40 +1,64 @@
-// https://www.cloudkarafka.com/ הפעלת קפקא במסגרת ספק זה
+const dotenv = require('dotenv');
+dotenv.config({ path: '../../../.env' });
 
 const uuid = require("uuid");
 const Kafka = require("node-rdkafka");
-const kafkaConf = require("../../config/kafka.cnfig");
+const kafkaConf = require("../../config/kafka.config");
 
 const prefix = `${kafkaConf["sasl.username"]}-`
 const topic = `${prefix}new`;
-const producer = new Kafka.Producer(kafkaConf);
 
-const maxMessages = 5;
+var producer = new Kafka.Producer(kafkaConf);
 
-const genMessage = i => new Buffer.from(`Kafkakaka example, message number ${i}`);
-
-producer.on("ready", function(arg) {
-  console.log(`producer ${arg.name} ready.`);
-  for (var i = 0; i < maxMessages; i++) {
-    producer.produce(topic, -1, genMessage(i), i);
-  }
- // setTimeout(() => producer.disconnect(), 0);
-});
-
-producer.on("disconnected", function(arg) {
-  process.exit();
-});
-
-producer.on('event.error', function(err) {
-  console.error(err);
-  process.exit(1);
-});
+//logging debug messages, if debug is enabled
 producer.on('event.log', function(log) {
-  // console.log(log);
+  //console.log(log);
 });
-console.log(producer.listenerCount())
+
+//logging all errors
+producer.on('event.error', function(err) {
+  console.error('Error from producer');
+  console.error(err);
+});
+
+//counter to stop this sample after maxMessages are sent
+var counter = 0;
+var maxMessages = 10;
+
+producer.on('delivery-report', function(err, report) {
+  console.log('delivery-report: ' + JSON.stringify(report));
+  counter++;
+});
+
+//Wait for the ready event before producing
+producer.on('ready', function(arg) {
+  console.log('producer ready.' + JSON.stringify(arg));
+
+  for (var i = 0; i < maxMessages; i++) {
+    var value = Buffer.from('value-' +i);
+    var key = "key-"+i;
+    // if partition is set to -1, librdkafka will use the default partitioner
+    var partition = -1;
+    var headers = [
+      { header: "header value" }
+    ]
+    producer.produce(topic, partition, value, key, Date.now(), "", headers);
+  }
+
+  //need to keep polling for a while to ensure the delivery reports are received
+  var pollLoop = setInterval(function() {
+      producer.poll();
+      if (counter === maxMessages) {
+        clearInterval(pollLoop);
+        producer.disconnect();
+      }
+    }, 1000);
+
+});
+
+producer.on('disconnected', function(arg) {
+  console.log('producer disconnected. ' + JSON.stringify(arg));
+});
+
+//starting the producer
 producer.connect();
-
-
-
-
-// module.exports={publish}
