@@ -6,6 +6,7 @@
     "mysql": "^2.18.1",
     "node-rdkafka": "^2.13.0",
     "nodemon": "^2.0.20",
+    "random-names-hebrew": "^0.0.20",
     "redis": "^4.3.1",
     "uuid": "^9.0.0"
   }
