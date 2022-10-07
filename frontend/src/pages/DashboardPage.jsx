@@ -62,8 +62,8 @@ export default function DashboardApp() {
                         <CallsCounter
                            // data={data.calls_per_topic["ניתוק"]}
                             title="וניל"
-                            icon="la:user-alt-slash"
-                            color="#a50000"
+                            icon="fluent-emoji:white-circle"
+                            color="#FDFDFD"
                             isloaded={isloaded}
                         />
                     </Grid>
@@ -73,8 +73,8 @@ export default function DashboardApp() {
                         <CallsCounter
                             data={data.calls_per_topic["תלונה"]}
                             title="שוקולד"
-                            icon="carbon:user-simulation"
-                            color="#9900ff"
+                            icon="fluent-emoji-high-contrast:chocolate-bar"
+                            color="#a50000"
                             isloaded={isloaded}
                         />
                     </Grid>
@@ -84,8 +84,8 @@ export default function DashboardApp() {
                         <CallsCounter
                             data={data.calls_per_topic["שירות"]}
                             title="תות"
-                            icon="ri:customer-service-2-fill"
-                            color="#2196f3"
+                            icon="fluent-emoji-high-contrast:strawberry"
+                            color="#E430BB"
                             isloaded={isloaded}
                         />
                     </Grid>
@@ -93,8 +93,8 @@ export default function DashboardApp() {
                         <CallsCounter
                             data={data.calls_per_topic["שירות"]}
                             title="לימון"
-                            icon="ri:customer-service-2-fill"
-                            color="#2196f3"
+                            icon="bx:lemon"
+                            color="#D4E430"
                             isloaded={isloaded}
                         />
                     </Grid>
@@ -102,7 +102,7 @@ export default function DashboardApp() {
                         <CallsCounter
                             data={data.calls_per_topic["שירות"]}
                             title="חלבה"
-                            icon="ri:customer-service-2-fill"
+                            icon="fluent-emoji-high-contrast:butter"
                             color="#2196f3"
                             isloaded={isloaded}
                         />

@@ -7,39 +7,71 @@ import { formatTime } from "../../utils/formatTime";
 import Iconify from "../general/Iconify";
 import config from "../../config";
 
-const LANGS = ["עברית", "אנגלית", "רוסית", "ערבית", "אמהרית", "צרפתית"];
+
 const PRODUCTS = ["חלבה","לימון", "תות", "שוקולד", "וניל"];
 const GENDERS = ["זכר", "נקבה"];
-const TOPICS = ["הצטרפות", "ניתוק", "שירות", "תלונה"];
 
-const SEND_NEW_CALL_URL = `${config.messageBrokerURL}/api/calls`;
+
+
+const SEND_NEW_PURCHASE = `${config.messageBrokerURL}/api/calls`;
 
 export default function NewCall({ id, data, setActiveCalls }) {
-    const [callData, setCallData] = useState(data);
+    const [callData, setCallData] = useState('');
+    const [name,setName]= useState('');
+    const [city,setCity]= useState('');
+    const [age,setAge]= useState('');
+    const [flavor,setFlavor]= useState('');
+    const [gender,setGender]= useState('');
+    const [amount,setAmount]= useState('');
 
-    const { seconds, minutes, hours, pause } = useStopwatch({ autoStart: true });
+    
 
-    const handleEndCall = async (e) => {
+    // const handleEndCall = async (e) => {
+    //     e.preventDefault();
+    //     const timeNow = Date.now();
+    //     const call = {
+    //         ...callData,
+    //         id: Number(callData.id),
+    //         duration: timeNow - callData.start_time,
+    //         end_time: timeNow,
+    //         age: Number(callData.age)
+    //     };
+    //     try {
+    //         await axios.post(SEND_NEW_CALL_URL, call);
+    //         handleCancelCall();
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
+
+    const handleFinish=async(e) => {
         e.preventDefault();
-        const timeNow = Date.now();
-        const call = {
-            ...callData,
-            id: Number(callData.id),
-            duration: timeNow - callData.start_time,
-            end_time: timeNow,
-            age: Number(callData.age)
+        const timeNow=Date.now();
+        const purchase={
+            name,
+            city,
+            age,
+            gender,
+            flavor,
+            amount,
+            timeNow
+
         };
         try {
-            await axios.post(SEND_NEW_CALL_URL, call);
-            handleCancelCall();
+            await axios.post(SEND_NEW_PURCHASE, purchase);
+            
         } catch (error) {
             console.log(error);
         }
-    };
+    }
 
     const handleCancelCall = () => {
         setActiveCalls((prev) => prev.filter((call) => call.id !== id));
     };
+    const handleNewBuy = () => {
+        setActiveCalls((prev) => prev.filter((call) => call.id !== id));
+    };
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -48,9 +80,15 @@ export default function NewCall({ id, data, setActiveCalls }) {
             [name]: value
         });
     };
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        const purchase={name,city,age,gender,flavor,amount};
+        console.log(purchase);
+    }
+    
 
     return (
-        <form onSubmit={handleEndCall}>
+        <form onSubmit={handleSubmit}>
             <TableRow hover key={id} tabIndex={-1} role="contentinfo" dir="rtl">
                 {/* כפתור סיום שיחה */}
                 {/* <TableCell align="center" style={{ width: "10px" }}>
@@ -102,7 +140,8 @@ export default function NewCall({ id, data, setActiveCalls }) {
                         type="text"
                         size="small"
                         name="name"
-                        onChange={handleChange}
+                       
+                        onChange= {(e)=> setName(e.target.value) }
                     />
                 </TableCell>
 
@@ -114,7 +153,8 @@ export default function NewCall({ id, data, setActiveCalls }) {
                         type="text"
                         size="small"
                         name="city"
-                        onChange={handleChange}
+                        onChange= {(e)=> setCity(e.target.value)}
+                       
                     />
                 </TableCell>
 
@@ -126,7 +166,7 @@ export default function NewCall({ id, data, setActiveCalls }) {
                         type="number"
                         size="small"
                         name="age"
-                        onChange={handleChange}
+                        onChange= {(e)=> setAge(e.target.value)}
                     />
                 </TableCell>
 
@@ -138,7 +178,7 @@ export default function NewCall({ id, data, setActiveCalls }) {
                         size="small"
                         name="gender"
                         select
-                        onChange={handleChange}
+                        onChange= {(e)=> setGender(e.target.value)}
                     >
                         {GENDERS.map((name) => (
                             <MenuItem key={name} value={name}>
@@ -156,13 +196,17 @@ export default function NewCall({ id, data, setActiveCalls }) {
                         size="small"
                         name="product"
                         select
-                        onChange={handleChange}
+                        
+                        onChange= {(e)=> setFlavor(e.target.value)}
+                        
                     >
                         {PRODUCTS.map((name) => (
                             <MenuItem key={name} value={name}>
                                 {name}
                             </MenuItem>
                         ))}
+                       
+
                     </TextField>
                 </TableCell>
 
@@ -172,10 +216,11 @@ export default function NewCall({ id, data, setActiveCalls }) {
                     <TextField
                         required
                         label="כמות"
-                        type="text"
+                        type="number"
                         size="small"
                         name="topic"
-                        onChange={handleChange}
+                        onChange= {(e)=> setAmount(e.target.value)}
+                        
                     />
                 </TableCell>
 
@@ -184,7 +229,9 @@ export default function NewCall({ id, data, setActiveCalls }) {
                         size="small"
                         type="submit"
                         variant="outlined"
+                        onClick={handleFinish}
                         color="primary"
+                        
                         endIcon={
                             <Iconify
                                 icon="lucide:ice-cream"
@@ -194,8 +241,13 @@ export default function NewCall({ id, data, setActiveCalls }) {
                     >
                        קנה
                     </Button>
+                    
+                    
+                    
+                    
                    
                 </TableCell>
+                
 
                 {/* נושא שיחה */}
                 {/* <TableCell align="right">
