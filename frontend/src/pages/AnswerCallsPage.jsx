@@ -117,7 +117,7 @@ export default function AnswerCallsPage() {
                 city: "",
                 product: "וניל",
                 lang: "עברית",
-                topic: "",
+                topic: "הצטרפות",
                 period
             },
             ...activeCalls
@@ -135,53 +135,51 @@ export default function AnswerCallsPage() {
             });
             setSimulatorRate(0);
         } else {
-            
             await fetch(START_SIMULATOR_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-            
             setSimulatorRate(1);
         }
         console.log("generatorRate", simulatorRate);
     };
 
-    // const handleSpeedChange = (event, speed) => {
-    //     console.log(speed);
-    //     setSimulatorRate(speed);
-    //     fetch(`${SET_SIMULATOR_RATE_URL}?rate=${speed}`, { method: "post" });
-    // };
+    const handleSpeedChange = (event, speed) => {
+        console.log(speed);
+        setSimulatorRate(speed);
+        fetch(`${SET_SIMULATOR_RATE_URL}?rate=${speed}`, { method: "post" });
+    };
 
-    // const fetchSimulatorStatus = async () => {
-    //     try {
-    //         const { data } = await axios.get(GET_SIMULATOR_STATUS_URL);
-    //         setSimulatorRate(data.simulatorRate);
-    //     } catch (error) {
-    //         console.log(error);
-    //         setSimulatorRate(0);
-    //     }
-    // };
+    const fetchSimulatorStatus = async () => {
+        try {
+            const { data } = await axios.get(GET_SIMULATOR_STATUS_URL);
+            setSimulatorRate(data.simulatorRate);
+        } catch (error) {
+            console.log(error);
+            setSimulatorRate(0);
+        }
+    };
 
-    // const fetchAllCalls = async () => {
-    //     try {
-    //         const response = await axios.get(GET_ALL_CALLS_URL);
-    //         setLastCalls(response.data);
-    //         console.log("lastCalls", response);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+    const fetchAllCalls = async () => {
+        try {
+            const response = await axios.get(GET_ALL_CALLS_URL);
+            setLastCalls(response.data);
+            console.log("lastCalls", response);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-    // useEffect(() => {
-    //     fetchAllCalls();
-    //     fetchSimulatorStatus();
-    //     socket.on("last_call", (data) => {
-    //         console.log("newCall", data);
-    //         setLastCalls((prev) => [data, ...prev]);
-    //     });
-    // }, []);
+    useEffect(() => {
+        fetchAllCalls();
+        fetchSimulatorStatus();
+        socket.on("last_call", (data) => {
+            console.log("newCall", data);
+            setLastCalls((prev) => [data, ...prev]);
+        });
+    }, []);
 
     return (
         <Page title="הזמנת גלידה | CallCenter">
@@ -279,7 +277,7 @@ export default function AnswerCallsPage() {
                             min={1}
                             step={2}
                             marks={marks}
-                           
+                            onChangeCommitted={handleSpeedChange}
                             sx={{ width: "60%" }}
                         />
                         <Button variant="contained" color="error" onClick={handleToggleAuto}>
