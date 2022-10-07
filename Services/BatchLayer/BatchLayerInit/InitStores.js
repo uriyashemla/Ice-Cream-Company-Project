@@ -1,4 +1,6 @@
 const axios = require("axios").default;
+const names = require("random-names-hebrew")
+
 
 module.exports = () => {
   const storesNum = 100;
@@ -6,7 +8,6 @@ module.exports = () => {
 
   const loopStores = (stores) => {
     return new Promise(async (resolve, reject) => {
-      let arrayToPush = [];
       let storesArray = [];
 
       for (const store of stores) {
@@ -19,8 +20,9 @@ module.exports = () => {
 
           let storeObject = {
             id: correctStores,
-            name: store.שם_ישוב.trim(),
+            cityName: store.שם_ישוב.trim(),
             cityType: "mixed",
+            ownerName: names.create().fullName,
             toddlers: store.גיל_0_6 / store.סהכ,
             kids: store.גיל_6_18 / store.סהכ,
             adolescent: store.גיל_19_45 / store.סהכ,
@@ -62,11 +64,8 @@ module.exports = () => {
               }
             }
           });
-
-          arrayToPush.push(storeObject);
+          console.log(storeObject);
           storesArray.push(storeObject);
-          arrayToPush = [];
-
         }
       }
       

@@ -18,7 +18,7 @@ connection.connect(async function(err) {
   try{
     let stores = await InitStores()
     stores.forEach((element)=>{
-      var sql = `INSERT INTO stores_info (id, cityName, cityType, toddlers, kids, adolescent, adults, middleAge, seniors) VALUES ('${element.id}' , '${element.name.trim().replace('\'','')}', '${element.cityType.trim()}', '${element.toddlers}', '${element.kids}', '${element.adolescent}', '${element.adults}', '${element.middleAge}', '${element.seniors}')`;
+      var sql = `INSERT INTO stores_info (id, cityName, cityType, ownerName, toddlers, kids, adolescent, adults, middleAge, seniors) VALUES ('${element.id}' , '${element.cityName.trim().replace('\'','')}', '${element.cityType.trim()}', '${element.ownerName.trim().replace('\'','')}', '${element.toddlers}', '${element.kids}', '${element.adolescent}', '${element.adults}', '${element.middleAge}', '${element.seniors}')`;
 
 
       connection.query(sql, function(err) {
