@@ -42,9 +42,6 @@ connection.connect(async function(err) {
             if (err) throw err;
             res.forEach(async (element) => {
                 await publisher.set(`${element.cityName}`, JSON.stringify(obj));
-                const value = await publisher.get(`אשדוד`);
-
-                //console.log(value);
             })
         });  
       }  
