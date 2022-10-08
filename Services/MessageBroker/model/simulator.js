@@ -40,5 +40,3 @@ const generatePurchase = async () => {
 module.exports = {
   generatePurchase,
 };
-
-generatePurchase();
