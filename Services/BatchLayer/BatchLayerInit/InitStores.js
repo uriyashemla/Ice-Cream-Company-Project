@@ -41,7 +41,6 @@ module.exports = () => {
             citizenData = await axios.get(url);
           } catch (error) {}
 
-          // console.log(store.שם_ישוב);
           citizenData.data.Table?.forEach((tableResult) => {
             if (tableResult.Name === store.שם_ישוב.trim()) {
               const jews =
@@ -64,7 +63,6 @@ module.exports = () => {
               }
             }
           });
-          console.log(storeObject);
           storesArray.push(storeObject);
         }
       }

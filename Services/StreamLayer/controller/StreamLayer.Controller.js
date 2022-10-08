@@ -1,17 +1,24 @@
-const db = require("../database/InitInventory");
+const db = require("../../api/redis");
+
+const reduceInventory = async (req, res) => {
+  const { cityName = "אשדוד", taste = "Halva", quantity = 6 } = req.body;
+  await db.createRedisConnection();
+  const value = await db.get(cityName);
+  value[taste] -= quantity;
+  db.set(cityName, JSON.stringify(value));
+};
 
 
-const updateInventory = (async (req,res) => {
-
-    const value = await db.publisher.get(`אשדוד`);
-    let obj = JSON.parse(value)
-    //obj.Strawberry--;
-    //await db.publisher.set(`אשדוד`,JSON.stringify(obj));
-    console.log(await db.publisher.get(`אשדוד`));
-
-    // await db.publisher.set(`${element.cityName}`,newValue);
-});
+const addInventory = async (req, res) => {
+  await db.createRedisConnection();
+  const value = await db.get(cityName);
+  value[taste] += quantity;
+  db.set(cityName, JSON.stringify(value));
+};
 
 module.exports = {
-    updateInventory
+  reduceInventory,
+  addInventory,
 };
+
+updateInventory();

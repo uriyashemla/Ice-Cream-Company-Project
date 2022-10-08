@@ -9,5 +9,25 @@
     "random-names-hebrew": "^0.0.20",
     "redis": "^4.3.1",
     "uuid": "^9.0.0"
-  }
+  },
+  "name": "ice-cream-company-project",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uriyashemla/Ice-Cream-Company-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uriyashemla/Ice-Cream-Company-Project/issues"
+  },
+  "homepage": "https://github.com/uriyashemla/Ice-Cream-Company-Project#readme"
 }
