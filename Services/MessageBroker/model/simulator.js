@@ -2,7 +2,7 @@ const mySql = require("../../api/mySql");
 const redis = require("../../api/redis");
 
 const generatePurchase = async () => {
-  let tastes, quantity, city;
+  let date, tastes, quantity, city;
 
   //MYSQL
   try {

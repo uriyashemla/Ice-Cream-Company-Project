@@ -3,6 +3,8 @@ let publisher;
 
 const createRedisConnection = () => {
   return new Promise((resolve, reject) => {
+    if (publisher) return resolve()
+
     publisher = redis.createClient();
     publisher.connect();
     publisher.on("connect",  () => {
