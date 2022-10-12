@@ -18,7 +18,6 @@ const createRedisConnection = () => {
   });
 };
 
-
 const flushRedisDB = () => {
     publisher.flushAll();
 }

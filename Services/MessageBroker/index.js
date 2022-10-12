@@ -5,7 +5,7 @@ require("dotenv/config");
 const { createSqlConnection } = require("../BatchLayer/model/mySql");
 const simulatorController = require("./controller/simulator.controller");
 
-const app = express.urlencoded({ extended: false });
+const app = express();
 
 /* Middlewares */
 app.use(express.json());
@@ -16,10 +16,10 @@ app
   .get("/", (req, res) => res.send("Hello World!"))
 
   .post("/api/insertPurchase", simulatorController.sendMessage)
-  .post("/api/startSimulator", controller.startSimulator)
-  .post("/api/stopSimulator", controller.stopSimulator)
-  .get("/api/simulatorStatus", controller.getSimulatorStatus)
-  .post("/api/simulatorRate", controller.setSimulatorRate);
+  .post("/api/startSimulator", simulatorController.startSimulator)
+  .post("/api/stopSimulator", simulatorController.stopSimulator)
+  .get("/api/simulatorStatus", simulatorController.getSimulatorStatus)
+  .post("/api/simulatorRate", simulatorController.setSimulatorRate);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

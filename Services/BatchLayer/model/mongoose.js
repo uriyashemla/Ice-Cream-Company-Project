@@ -21,7 +21,6 @@ const createMongooseConnection = () => {
 
 const createPurchaseModel = () => {
   const Schema = mongoose.Schema;
-  const ObjectId = Schema.ObjectId;
 
   const PurchaseSchema = new Schema({
     cityName: String,

@@ -1,6 +1,7 @@
 const uuid = require("uuid");
 const Kafka = require("node-rdkafka");
 const kafkaConf = require("../../config/kafka.config");
+const { generatePurchase } = require("./simulator");
 require("dotenv").config();
 
 

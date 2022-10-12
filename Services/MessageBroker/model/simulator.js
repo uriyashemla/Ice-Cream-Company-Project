@@ -1,5 +1,7 @@
-const mySql = require("../../api/mySql");
-const redis = require("../../api/redis");
+const mySql = require("../../BatchLayer/model/mySql");
+const redis = require("../../StreamLayer/model/redis");
+
+
 
 const generatePurchase = async () => {
   let date, tastes, quantity, city;
@@ -8,7 +10,6 @@ const generatePurchase = async () => {
   try {
     const randomCityId = Math.floor(Math.random() * 100);
 
-    await mySql.createSqlConnection();
     city = await mySql.getCityById(randomCityId);
   } catch (error) {
     return console.error(`error with mysql: ${error}`);

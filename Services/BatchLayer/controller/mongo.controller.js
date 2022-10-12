@@ -28,7 +28,6 @@ const insertPurchase = async (req, res) => {
       holiday: await getHoliday(date),
       weathe: await getWeather
     };
-    return console.log(obj);
     await mongo.insertPurchase(obj);
     res.status(200).send("purchase inserted");
   } catch (error) {

@@ -1,13 +1,14 @@
-const { createMongoConnection } = require("./model/mongo");
-const { createMongooseConnection } = require("./model/mongoose");
+const mongo = require("./model/mongo");
+const mongoose = require("./model/mongoose");
 
 const express = require("express");
 const cors = require("cors");
 
 const mongoController = require("./controller/mongo.controller");
-const { createSqlConnection } = require("./model/mySql");
-// const kafkaConsumer = require("./model/Kafka");
-// const PhoneCallModel = require("./model/PhoneCallModel");
+const mySql = require("./model/mySql");
+const kafkaConsumer = require("./model/Kafka");
+
+
 
 const app = express();
 
@@ -27,13 +28,13 @@ app
 //   .post("/api/predictCall", bigmlController.predictCall);
 
 /* Kafka */
-// kafkaConsumer.on("data", function (message) {
-//   const phoneCall = new PhoneCallModel(JSON.parse(message.value));
-//   phoneCall
-//     .save()
-//     .then(() => console.log("Inserted to MongoDB:", JSON.stringify(phoneCall).slice(0, 100)))
-//     .catch((err) => console.log(err));
-// });
+kafkaConsumer.on("data", function (message) {
+  const Purchase = new mongoose.createPurchaseModel(JSON.parse(message.value));
+  Purchase
+    .save()
+    .then(() => console.log("Inserted to MongoDB:", JSON.stringify(Purchase).slice(0, 100)))
+    .catch((err) => console.log(err));
+});
 
 /* Start server */
 const PORT = process.env.PORT || 3003;
@@ -41,6 +42,6 @@ app.listen(PORT, () => {
   console.log(`Batch Layer listening at http://localhost:${PORT}`);
 });
 
-createMongoConnection()
-createMongooseConnection()
-createSqlConnection()
+mongo.createMongoConnection()
+mongoose.createMongooseConnection()
+mySql.createSqlConnection()

@@ -6,7 +6,7 @@ let intervalId = -1;
 let simulatorRate = 0;
 const DEFAULT_RATE = 1;
 
-// Gets call and send it to kafka
+// Gets purchase and send it to kafka
 const sendMessage = (req, res) => {
     try {
         kafka.publishMessage(req.body);
