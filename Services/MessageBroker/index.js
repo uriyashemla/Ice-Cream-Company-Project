@@ -4,6 +4,7 @@ require("dotenv/config");
 
 const { createSqlConnection } = require("../BatchLayer/model/mySql");
 const simulatorController = require("./controller/simulator.controller");
+const { createRedisConnection } = require("../StreamLayer/model/redis");
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(cors());
 app
   .get("/", (req, res) => res.send("Hello World!"))
 
-  .post("/api/insertPurchase", simulatorController.sendMessage)
+  .post("/api/sendMessage", simulatorController.sendMessage)
   .post("/api/startSimulator", simulatorController.startSimulator)
   .post("/api/stopSimulator", simulatorController.stopSimulator)
   .get("/api/simulatorStatus", simulatorController.getSimulatorStatus)
@@ -27,3 +28,4 @@ app.listen(PORT, () => {
 });
 
 createSqlConnection();
+createRedisConnection();

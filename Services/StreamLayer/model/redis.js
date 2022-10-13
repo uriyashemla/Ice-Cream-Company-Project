@@ -20,6 +20,7 @@ const createRedisConnection = () => {
 
 const flushRedisDB = () => {
     publisher.flushAll();
+    console.log("redis flushed");
 }
 
 const exist = (cityName) => {

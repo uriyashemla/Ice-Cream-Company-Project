@@ -19,18 +19,17 @@ const createMongooseConnection = () => {
   });
 };
 
-const createPurchaseModel = () => {
   const Schema = mongoose.Schema;
 
   const PurchaseSchema = new Schema({
     cityName: String,
     cityType: String,
-    toddlers: Double,
-    kids: Double,
-    adolescent: Double,
-    adults: Double,
-    middleAge: Double,
-    seniors: Double,
+    toddlers: String,
+    kids: String,
+    adolescent: String,
+    adults: String,
+    middleAge: String,
+    seniors: String,
     day: String,
     month: String,
     year: String,
@@ -40,10 +39,9 @@ const createPurchaseModel = () => {
     taste: String,
     quantity: String,
   });
-  return mongoose.model("Purchase", PurchaseSchema);
-};
+  const purchaseModel = mongoose.model("Sells", PurchaseSchema);
 
 module.exports = {
   createMongooseConnection,
-  createPurchaseModel,
+  purchaseModel
 };

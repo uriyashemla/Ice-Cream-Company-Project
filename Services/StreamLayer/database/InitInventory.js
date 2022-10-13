@@ -1,7 +1,7 @@
-const mySql = require("../../api/mySql");
-const redis = require("../../api/redis");
+const mySql = require("../../BatchLayer/model/mySql");
+const redis = require("../model/redis");
 
-var sql = `SELECT cityName FROM storesdb.stores_info;`;
+let sql = `SELECT cityName FROM storesdb.stores_info;`;
 
 const obj = {
   Chocolate: 10000,
@@ -26,12 +26,12 @@ mySql.createSqlConnection().then(() => {
       mySql
         .executeQuery(sql)
         .then((res) => {
-          res.forEach(async (element) => {
+          res.forEach(async (store) => {
             try {
-              await redis.set(`${element.cityName}`, JSON.stringify(obj));
+              await redis.set(`${store.cityName}`, JSON.stringify(obj));
               console.log("succes push to redis");
             } catch (err) {
-              // return console.log(err);
+              return console.log(err);
             }
           });
         })

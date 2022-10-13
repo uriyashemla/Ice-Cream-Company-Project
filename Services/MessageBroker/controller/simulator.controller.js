@@ -22,10 +22,16 @@ const startSimulator = (req, res) => {
     if (simulatorRate < 1) {
         simulatorRate = DEFAULT_RATE;
     }
-    intervalId = setInterval(() => {
-        const purchase = simulator.generatePurchase();
-        kafka.publishMessage(purchase);
-        console.log(purchase);
+    intervalId = setInterval(async () => {
+        try{
+            const purchase = await simulator.generatePurchase();
+            kafka.publishMessage(purchase);
+            console.log(purchase);
+
+        }
+        catch(error){
+            return console.log(error)
+        }
     }, simulatorRate * 1000);
     console.log("************ Auto mode started ************");
     res.send("************ Auto mode started ************");

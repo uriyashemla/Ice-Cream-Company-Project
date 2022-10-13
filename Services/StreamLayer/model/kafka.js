@@ -1,7 +1,7 @@
 const { KafkaConsumer } = require("node-rdkafka");
 
 const topic = process.env.KAFKA_TOPIC;
-const kafkaConsumer = new KafkaConsumer(require("../config/kafka.config"));
+const kafkaConsumer = new KafkaConsumer(require("../../config/kafka.config"));
 
 kafkaConsumer
     .on("ready", (arg) => {

@@ -7,6 +7,8 @@ const cors = require("cors");
 const mongoController = require("./controller/mongo.controller");
 const mySql = require("./model/mySql");
 const kafkaConsumer = require("./model/Kafka");
+const parseSeason = require("./utils/parseSeason");
+const getHoliday = require("./webServices/getHoliday");
 
 
 
@@ -18,7 +20,8 @@ app.use(cors());
 
 /* Routes */
 app
-  .get("/", (req, res) => res.send("Hello World!"))
+  .get("/", (req, res) => {
+    res.send("Hello World!")})
 
   .post("/api/insertPurchase", mongoController.insertPurchase)
   .get("/api/getAllPurchases", mongoController.getAllPurchases)
@@ -28,12 +31,49 @@ app
 //   .post("/api/predictCall", bigmlController.predictCall);
 
 /* Kafka */
-kafkaConsumer.on("data", function (message) {
-  const Purchase = new mongoose.createPurchaseModel(JSON.parse(message.value));
+kafkaConsumer.on("data", async function (message) {
+  console.log("got data");
+  const buffer = Buffer.from(message.value)
+const bufferObject = JSON.parse(buffer.toString())
+
+let { cityName, taste, quantity, date } = bufferObject
+try {
+  // let cityInfo = await mysql.getCityByName(data.cityName);
+  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } =
+    await mySql.getCityByName(cityName);
+  let obj = {
+    taste,
+    quantity,
+    day: new Date(date).getDate(),
+    month: new Date(date).getMonth() + 1,
+    year: new Date(date).getFullYear(),
+    cityName,
+    cityType,
+    toddlers,
+    kids,
+    adolescent,
+    adults,
+    middleAge,
+    seniors,
+    season: parseSeason(date),
+    holiday: await getHoliday(date),
+  };
+  
+  const Purchase = new mongoose.purchaseModel(obj);
   Purchase
     .save()
     .then(() => console.log("Inserted to MongoDB:", JSON.stringify(Purchase).slice(0, 100)))
     .catch((err) => console.log(err));
+
+} catch (error) {
+  console.log(error);
+  
+}
+
+
+
+
+
 });
 
 /* Start server */
