@@ -1,0 +1,10 @@
+.Menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.Button{
+    width:60px;
+    margin:5px;
+}

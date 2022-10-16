@@ -9,6 +9,7 @@ const mySql = require("./model/mySql");
 const kafkaConsumer = require("./model/Kafka");
 const parseSeason = require("./utils/parseSeason");
 const getHoliday = require("./webServices/getHoliday");
+const { getCitiesList } = require("./controller/mysql.controller");
 
 const app = express();
 
@@ -26,6 +27,8 @@ app
   .get("/api/getAllPurchases", mongoController.getAllPurchases)
   .delete("/api/deleteAllPurchases", mongoController.deleteAllPurchases);
   
+  app.get("/api/getCitiesList", getCitiesList);
+
 //   .get("/api/buildModel", bigmlController.buildModel)
 //   .get("/api/modelInfo", bigmlController.getModelInfo)
 //   .post("/api/predictCall", bigmlController.predictCall);

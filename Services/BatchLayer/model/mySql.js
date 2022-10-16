@@ -43,4 +43,14 @@ const getCityById = (id) => {
   });
 };
 
-module.exports = { createSqlConnection, executeQuery, getCityByName, getCityById };
+const getAllCities = () => {
+  return new Promise((resolve, reject) => {
+    let query = `SELECT cityName FROM storesdb.stores_info;`;
+    connection.query(query, (error, results, fields) => {
+      if (error) return reject({ error });
+      return resolve(results);
+    });
+  });
+}
+
+module.exports = { createSqlConnection, executeQuery, getCityByName, getCityById,getAllCities };
