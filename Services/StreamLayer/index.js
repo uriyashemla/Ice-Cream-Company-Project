@@ -16,7 +16,8 @@ app.use(cors());
 
 app
   .get("/", (req, res) => {
-    res.send("Hello World!")})
+    res.send("Hello World!");
+  })
   /* Routes */
 
   .put("/api/reduceInventory", controller.reduceInventory)
@@ -35,19 +36,20 @@ app
 //     }
 // });
 
-// kafkaConsumer.on("data", async (message) => {
-//     const new_Call = JSON.parse(message.value);
-//     try {
-//         let calls_data = await db.redis.json.GET("calls_data");
-//         calls_data = processData(new_Call, calls_data);
-//         await db.redis.json.SET("calls_data", "$", calls_data);
-//         await db.redis.json.ARRINSERT("All_calls", "$", 0, new_Call);
-//         io.emit("calls", calls_data);
-//         io.emit("last_call", new_Call);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// });
+kafkaConsumer.on("data", async (message) => {
+  console.log("got data");
+  const buffer = Buffer.from(message.value);
+  const bufferObject = JSON.parse(buffer.toString());
+
+  let { cityName, taste, quantity, date } = bufferObject;
+  try {
+    db.reduceInventory(cityName,taste,quantity);    
+  //   io.emit("calls", calls_data);
+  //   io.emit("last_call", new_Call);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 /* Start server */
 const PORT = process.env.PORT || 3002;

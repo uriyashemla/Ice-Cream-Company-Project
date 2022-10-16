@@ -10,8 +10,6 @@ const kafkaConsumer = require("./model/Kafka");
 const parseSeason = require("./utils/parseSeason");
 const getHoliday = require("./webServices/getHoliday");
 
-
-
 const app = express();
 
 /* Middlewares */
@@ -21,11 +19,13 @@ app.use(cors());
 /* Routes */
 app
   .get("/", (req, res) => {
-    res.send("Hello World!")})
+    res.send("Hello World!");
+  })
 
   .post("/api/insertPurchase", mongoController.insertPurchase)
   .get("/api/getAllPurchases", mongoController.getAllPurchases)
-  .delete("/api/deleteAllPurchases", mongoController.deleteAllPurchases)
+  .delete("/api/deleteAllPurchases", mongoController.deleteAllPurchases);
+  
 //   .get("/api/buildModel", bigmlController.buildModel)
 //   .get("/api/modelInfo", bigmlController.getModelInfo)
 //   .post("/api/predictCall", bigmlController.predictCall);
@@ -33,47 +33,44 @@ app
 /* Kafka */
 kafkaConsumer.on("data", async function (message) {
   console.log("got data");
-  const buffer = Buffer.from(message.value)
-const bufferObject = JSON.parse(buffer.toString())
+  const buffer = Buffer.from(message.value);
+  const bufferObject = JSON.parse(buffer.toString());
 
-let { cityName, taste, quantity, date } = bufferObject
-try {
-  // let cityInfo = await mysql.getCityByName(data.cityName);
-  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } =
-    await mySql.getCityByName(cityName);
-  let obj = {
-    taste,
-    quantity,
-    day: new Date(date).getDate(),
-    month: new Date(date).getMonth() + 1,
-    year: new Date(date).getFullYear(),
-    cityName,
-    cityType,
-    toddlers,
-    kids,
-    adolescent,
-    adults,
-    middleAge,
-    seniors,
-    season: parseSeason(date),
-    holiday: await getHoliday(date),
-  };
-  
-  const Purchase = new mongoose.purchaseModel(obj);
-  Purchase
-    .save()
-    .then(() => console.log("Inserted to MongoDB:", JSON.stringify(Purchase).slice(0, 100)))
-    .catch((err) => console.log(err));
+  let { cityName, taste, quantity, date } = bufferObject;
+  try {
+    // let cityInfo = await mysql.getCityByName(data.cityName);
+    let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } =
+      await mySql.getCityByName(cityName);
+    let obj = {
+      taste,
+      quantity,
+      day: new Date(date).getDate(),
+      month: new Date(date).getMonth() + 1,
+      year: new Date(date).getFullYear(),
+      cityName,
+      cityType,
+      toddlers,
+      kids,
+      adolescent,
+      adults,
+      middleAge,
+      seniors,
+      season: parseSeason(date),
+      holiday: await getHoliday(date),
+    };
 
-} catch (error) {
-  console.log(error);
-  
-}
-
-
-
-
-
+    const Purchase = new mongoose.purchaseModel(obj);
+    Purchase.save()
+      .then(() =>
+        console.log(
+          "Inserted to MongoDB:",
+          JSON.stringify(Purchase).slice(0, 100)
+        )
+      )
+      .catch((err) => console.log(err));
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 /* Start server */
@@ -82,6 +79,6 @@ app.listen(PORT, () => {
   console.log(`Batch Layer listening at http://localhost:${PORT}`);
 });
 
-mongo.createMongoConnection()
-mongoose.createMongooseConnection()
-mySql.createSqlConnection()
+mongo.createMongoConnection();
+mongoose.createMongooseConnection();
+mySql.createSqlConnection();

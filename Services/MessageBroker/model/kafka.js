@@ -1,23 +1,25 @@
 const uuid = require("uuid");
 const Kafka = require("node-rdkafka");
 const kafkaConf = require("../../config/kafka.config");
-const { generatePurchase } = require("./simulator");
 require("dotenv").config();
 
 
-const topic = process.env.KAFKA_TOPIC;
-const producer = new Kafka.Producer(kafkaConf);
+const mongoTopic = process.env.KAFKA_TOPIC_MONGO;
+const redisTopic = process.env.KAFKA_TOPIC_REDIS;
 
+const producer = new Kafka.Producer(kafkaConf);
+producer.setPollInterval(100)
 producer
     .on("ready", (arg) =>
-        console.log(`producer ${arg.name} ready. topic: ${topic}`)
+        console.log(`producer ${arg.name} ready. topics: ${mongoTopic}, ${redisTopic} `)
     )
     .on("event", (err) => console.log(err))
     .connect();
 
 const publishMessage = async (purchase) => {            
     const m = Buffer.from(JSON.stringify(purchase));
-    producer.produce(topic, null, m, uuid.v4());
+    producer.produce(mongoTopic, null, m, uuid.v4());
+    producer.produce(redisTopic, null, m, uuid.v4());
 };
 
 module.exports = {

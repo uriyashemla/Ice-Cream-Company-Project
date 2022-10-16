@@ -3,7 +3,6 @@ const mySql = require("../../BatchLayer/model/mySql");
 
 const reduceInventory = async (req, res) => {
   const { cityName , taste , quantity } = req.body;
-  console.log(quantity);
   try {
     const value = await db.get(cityName);
     value[taste] -= quantity;
@@ -17,7 +16,6 @@ const reduceInventory = async (req, res) => {
 
 const addInventory = async (req, res) => {
   const { cityName , taste , quantity } = req.body;
-  console.log(quantity);
   try {
     const value = await db.get(cityName);
     value[taste] += +quantity;
