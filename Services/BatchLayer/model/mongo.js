@@ -28,7 +28,7 @@ const insertPurchase = (data) => {
 
 const getAllPurchases = () => {
   return new Promise(async (resolve, reject) => {
-    return resolve(mongoConn.find().limit(1500).toArray());
+    return resolve(mongoConn.find().limit(2000).toArray());
   });
 };
 

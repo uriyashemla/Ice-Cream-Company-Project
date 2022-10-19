@@ -5,13 +5,13 @@ const express = require("express");
 const cors = require("cors");
 
 const mongoController = require("./controller/mongo.controller");
-const bigmlController = require("./controller/bigml.controller");
 const mySql = require("./model/mySql");
 const kafkaConsumer = require("./model/Kafka");
 const parseSeason = require("./utils/parseSeason");
 const getHoliday = require("./webServices/getHoliday");
 const { getCitiesList } = require("./controller/mysql.controller");
 const getWeather = require("./webServices/getWeather");
+const { predictPurchase } = require("./controller/prediction");
 
 const app = express();
 
@@ -31,10 +31,7 @@ app
 
 app.get("/api/getCitiesList", getCitiesList);
 
-app
-  .get("/api/buildModel", bigmlController.buildModel)
-  .get("/api/modelInfo", bigmlController.getModelInfo)
-  .post("/api/predictPurchase", bigmlController.predictPurchase);
+app.post("/api/predictPurchase", predictPurchase);
 
 /* Kafka */
 kafkaConsumer.on("data", async function (message) {
@@ -63,7 +60,7 @@ kafkaConsumer.on("data", async function (message) {
       seniors,
       season: parseSeason(date),
       holiday: await getHoliday(date),
-      weather: await getWeather(date)
+      weather: await getWeather(date),
     };
 
     const Purchase = new mongoose.purchaseModel(obj);

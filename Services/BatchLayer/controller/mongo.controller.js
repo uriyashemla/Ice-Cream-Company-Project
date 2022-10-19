@@ -7,7 +7,6 @@ const parseSeason = require("../utils/parseSeason");
 const insertPurchase = async (req, res) => {
   let { cityName, taste, quantity, date } = req.body;
   try {
-    // let cityInfo = await mysql.getCityByName(data.cityName);
     let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } =
       await mysql.getCityByName(cityName);
     let obj = {
