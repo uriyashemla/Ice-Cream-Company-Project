@@ -1,39 +1,53 @@
-const axios = require("axios");
+
 
 module.exports = (date) => {
-  let startDate = new Date(date);
-  let toDate = new Date(date);
-  toDate.setDate(toDate.getDate() + 7);
+  let dateObj = new Date(date)
+  let r = Math.floor(Math.random() * 100) + 1;
 
-  startDate = startDate.toLocaleDateString("en-CA");
-  toDate = toDate.toLocaleDateString("en-CA");
-  let arr = [];
+  switch(dateObj.getMonth()){
 
-  return new Promise((resolve, reject) => {
-    axios
-      .get(
-        `https://www.hebcal.com/converter?cfg=json&start=${startDate}&end=${toDate}&g2h=1`
-      )
-      .then(async function (res) {
-        const { hdates } = res.data;
-        const eventsArr = Object.entries(hdates);
-        eventsArr.forEach((hd) => {
+    case 11:
+    case 0:
+    case 1:
+      if(r>=60)
+        return "קר מאוד"
+      else if(r<60 && r>=50)
+        return "נעים"
+      else    
+        return "קר"
+      
+    case 2:    
+    case 3:    
+    case 4:
+      if(r>=70)
+        return "חם"
+      else if(r<70 && r>=50)
+        return "קר"
+      else    
+        return "נעים"
+    case 5:        
+    case 6:        
+    case 7:        
+      if(r>=60)
+        return "חם מאוד"
+      else if(r<60 && r>=50)
+        return "נעים"
+      else    
+        return "חם"
+    
 
-         return hd[1].events.forEach((event) => {
-
-            if(event.split(' ')[0] !=="Parashat"){
-             return arr.push(event);
-            }
-          })
-        });
-
-
-        if(arr[0]) return resolve(true)
-        return resolve(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        reject(error);
-      });
-  });
-};
+    case 8:
+    case 9:
+    case 10:
+      if(r>=70)
+        return "קר"
+      else if(r<70 && r>=50)
+        return "חם"
+      else    
+        return "נעים"
+ 
+    
+    default:
+      break;
+  }
+}
