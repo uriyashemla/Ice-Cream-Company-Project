@@ -1,5 +1,3 @@
-
-
 module.exports = (date) => {
   let dateObj = new Date(date)
   let r = Math.floor(Math.random() * 100) + 1;

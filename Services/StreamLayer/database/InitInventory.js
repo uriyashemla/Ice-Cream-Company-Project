@@ -4,11 +4,11 @@ const redis = require("../model/redis");
 let sql = `SELECT cityName FROM storesdb.stores_info;`;
 
 const obj = {
-  Chocolate: 10000,
-  Vanilla: 10000,
-  Strawberry: 10000,
-  Lemon: 10000,
-  Halva: 10000,
+  Chocolate: 100,
+  Vanilla: 100,
+  Strawberry: 100,
+  Lemon: 100,
+  Halva: 100,
 };
 
 mySql.createSqlConnection().then(() => {
@@ -16,7 +16,6 @@ mySql.createSqlConnection().then(() => {
     let exist;
     try {
       exist = await redis.exist("אשדוד");
-  
     } catch (err) {
       return console.log(err);
     }
@@ -36,7 +35,6 @@ mySql.createSqlConnection().then(() => {
           });
         })
         .catch(console.log);
-
     }
   });
 });

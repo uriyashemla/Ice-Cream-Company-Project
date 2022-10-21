@@ -40,7 +40,6 @@ const generatePurchase = async () => {
         taste: tastes[randomTaste]
       }
 
-
       console.log(
         `Purchase is OK - City: ${city} ${tastes[randomTaste]} with ${randomQuantity}KG`
       );

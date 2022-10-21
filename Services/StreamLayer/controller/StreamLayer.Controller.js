@@ -5,7 +5,7 @@ const reduceInventory = async (req, res) => {
   const { cityName , taste , quantity } = req.body;
   try {
     const value = await db.get(cityName);
-    value[taste] -= quantity;
+    value[taste] -= +quantity;
     db.set(cityName, JSON.stringify(value));
     res.status(200).send("approved");
   } catch (error) {

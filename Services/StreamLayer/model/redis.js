@@ -41,7 +41,6 @@ const set = (cityName, value) => {
 };
 
 const get = (cityName) => {
-  // return publisher.get(cityName)
   return new Promise((resolve, reject) => {
     publisher
       .get(cityName)

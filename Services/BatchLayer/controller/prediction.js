@@ -5,7 +5,7 @@ const parseSeason = require("../utils/parseSeason");
 const getHoliday = require("../webServices/getHoliday");
 const getWeather = require("../webServices/getWeather");
 
-const predictPurchase = async (req, res) => {
+const buildeModel = async () => {
   const trainingData = await getAllPurchases();
   const className = "quantity";
   const features = [
@@ -24,18 +24,24 @@ const predictPurchase = async (req, res) => {
   ];
 
   const dt = new DecisionTree(trainingData, className, features);
+  return dt;
+};
+
+const predictWeekPurchases = async (req, res) => {
+  const dt = await buildeModel();
 
   let date = new Date();
   let changingDate = new Date(date.getTime());
 
   let { cityName, taste } = req.body;
-  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } = await getCityByName(cityName);
+  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } =
+    await getCityByName(cityName);
 
-  let arr = []
+  let arr = [];
 
   for (let i = 0; i < 7; i++) {
     changingDate.setDate(changingDate.getDate() + i);
-    
+
     let obj = {
       taste,
       cityName,
@@ -52,12 +58,42 @@ const predictPurchase = async (req, res) => {
     };
 
     let predictedClass = dt.predict(obj);
-    arr.push(predictedClass)
+    arr.push(predictedClass);
   }
 
   res.status(200).send(arr);
 };
 
+const predictPurchase = async (req, res) => {
+  const dt = await buildeModel();
+
+  let { cityName, taste, date } = req.body;
+  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } = await getCityByName(cityName);
+
+
+  let theDate = new Date(date);
+
+  let obj = {
+    taste,
+    cityName,
+    cityType,
+    toddlers,
+    kids,
+    adolescent,
+    adults,
+    middleAge,
+    seniors,
+    season: parseSeason(theDate),
+    holiday: await getHoliday(theDate),
+    weather: getWeather(theDate),
+  };
+
+  let predictedClass = dt.predict(obj);
+
+  res.status(200).send(predictedClass);
+};
+
 module.exports = {
+  predictWeekPurchases,
   predictPurchase,
 };
