@@ -90,7 +90,7 @@ export default ({ cities, tastes }) => {
           <br/>
           בתאריך: {new Date(prdictionRequest.date).toLocaleDateString("en-ca")} עונה: {cityData.season}, מזג האוויר: {cityData.weather},  חג: {cityData.holiday}
           <br/>
-          חיזוי הקניה לטעם {cityData.taste} :היא {predictionData} ק"ג
+          חיזוי הקניה לטעם {cityData.taste} היא {predictionData} ק"ג
         </h3>
       ) : (
         <></>
