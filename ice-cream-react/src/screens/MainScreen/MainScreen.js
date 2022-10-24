@@ -1,18 +1,34 @@
 import React, { useEffect, useState } from "react";
 import MainMenu from "../../components/MainMenu/MainMenu";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-// import "react-tabs/style/react-tabs.css";
-import "./MainScreen.css";
+import "react-tabs/style/react-tabs.css";
+// import "./MainScreen.css";
 import { getAllCities } from "../../api/batchLayer";
+import {
+  getAllInventory,
+  getAllTastes,
+  getStoreInventory,
+} from "../../api/streamLayer";
 import SelectList from "../../components/SelectList/SelectList";
+import StoresInventory from "../../components/StoresInventory/StoresInventory";
+import TotalInventory from "../../components/TotalInventory/TotalInventory";
+import Prediction from "../../components/Prediction/Prediction";
 
 export default () => {
   const [allCities, setAllCities] = useState("");
+  const [allTastes, setAllTastes] = useState("");
+  const [allInventory, setAllInventory] = useState(null);
 
-  useEffect(async () => {
+  const fetchAllData = async () => {
     try {
       setAllCities(await getAllCities());
+      setAllTastes(await getAllTastes());
+      setAllInventory(await getAllInventory());
     } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchAllData();
 
     let timer = setInterval(async () => {}, 5000);
 
@@ -21,14 +37,10 @@ export default () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   console.log("all cities updated");
-  // }, [allCities]);
-
   return (
     <div>
       <Tabs>
-        <TabList>
+        <TabList style={{ fontSize: "20px", fontWeight: "bolder" }}>
           <Tab>🏪 Stores Inventory</Tab>
           <Tab>🧺 Total Inventory</Tab>
           <Tab>🐱‍👤 Prediction</Tab>
@@ -36,25 +48,24 @@ export default () => {
         </TabList>
 
         <TabPanel>
-          <label>
-            Select Store:
-            {allCities[0] ? (
-              <SelectList
-                data={allCities}
-              />
-            ) : (
-              <></>
-            )}
-          </label>
+          {allCities[0] && allTastes[0] ? (
+            <StoresInventory cities={allCities} tastes={allTastes} />
+          ) : (
+            <h1>No Data Available</h1>
+          )}
         </TabPanel>
         <TabPanel>
-          <h2>Any content 2</h2>
+          <TotalInventory inventoryData={allInventory} tastes={allTastes} />
         </TabPanel>
         <TabPanel>
-          <h2>Any content 3</h2>
+          {allCities[0] && allTastes[0] ? (
+            <Prediction cities={allCities} tastes={allTastes} />
+          ) : (
+            <h1>No Data Available</h1>
+          )}
         </TabPanel>
         <TabPanel>
-          <h2>Any content 4</h2>
+          <h2>Maps</h2>
         </TabPanel>
       </Tabs>
     </div>
