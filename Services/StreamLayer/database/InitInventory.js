@@ -4,11 +4,11 @@ const redis = require("../model/redis");
 let sql = `SELECT cityName FROM storesdb.stores_info;`;
 
 const obj = {
-  Chocolate: 200,
-  Vanilla: 200,
-  Strawberry: 200,
-  Lemon: 200,
-  Halva: 200,
+  Chocolate: 50,
+  Vanilla: 50,
+  Strawberry: 50,
+  Lemon: 50,
+  Halva: 50,
 };
 
 mySql.createSqlConnection().then(() => {

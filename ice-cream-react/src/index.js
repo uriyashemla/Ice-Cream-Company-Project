@@ -11,7 +11,6 @@ root.render(
   <div className='Flex'>
     <Header />
     <App />
-    {/* <Footer/> */}
   </div>
 
 );

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import MainMenu from "../../components/MainMenu/MainMenu";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 // import "./MainScreen.css";
@@ -9,7 +8,6 @@ import {
   getAllTastes,
   getStoreInventory,
 } from "../../api/streamLayer";
-import SelectList from "../../components/SelectList/SelectList";
 import StoresInventory from "../../components/StoresInventory/StoresInventory";
 import TotalInventory from "../../components/TotalInventory/TotalInventory";
 import Prediction from "../../components/Prediction/Prediction";
@@ -29,12 +27,6 @@ export default () => {
 
   useEffect(() => {
     fetchAllData();
-
-    let timer = setInterval(async () => {}, 5000);
-
-    return () => {
-      clearInterval(timer);
-    };
   }, []);
 
   return (
@@ -44,7 +36,6 @@ export default () => {
           <Tab>🏪 Stores Inventory</Tab>
           <Tab>🧺 Total Inventory</Tab>
           <Tab>🐱‍👤 Prediction</Tab>
-          <Tab>🌎 Maps</Tab>
         </TabList>
 
         <TabPanel>
@@ -63,9 +54,6 @@ export default () => {
           ) : (
             <h1>No Data Available</h1>
           )}
-        </TabPanel>
-        <TabPanel>
-          <h2>Maps</h2>
         </TabPanel>
       </Tabs>
     </div>

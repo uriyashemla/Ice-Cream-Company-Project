@@ -36,7 +36,6 @@ const getCityInfo = async (req,res) => {
       holiday: parseHoliday(await getHoliday(date)),
       weather: getWeather(date),
     };
-    console.log(obj);
     res.status(200).send(obj);
   }
   catch(error){
