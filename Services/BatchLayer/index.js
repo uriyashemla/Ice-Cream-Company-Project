@@ -9,7 +9,7 @@ const mySql = require("./model/mySql");
 const kafkaConsumer = require("./model/Kafka");
 const parseSeason = require("./utils/parseSeason");
 const getHoliday = require("./webServices/getHoliday");
-const { getCitiesList } = require("./controller/mysql.controller");
+const { getCitiesList, getCityInfo } = require("./controller/mysql.controller");
 const getWeather = require("./webServices/getWeather");
 const prediction = require("./controller/prediction");
 
@@ -29,11 +29,19 @@ app
   .get("/api/getAllPurchases", mongoController.getAllPurchases)
   .delete("/api/deleteAllPurchases", mongoController.deleteAllPurchases);
 
-app.get("/api/getCitiesList", getCitiesList);
+app
+  .get("/api/getCitiesList", getCitiesList)
+  .get("/api/getCityInfo/:date/:cityName/:taste", getCityInfo);
 
 app
-  .post("/api/predictWeekPurchases", prediction.predictWeekPurchases)
-  .post("/api/predictPurchase", prediction.predictPurchase);
+  .get(
+    "/api/predictWeekPurchases/:cityName/:taste",
+    prediction.predictWeekPurchases
+  )
+  .get(
+    "/api/predictPurchase/:date/:cityName/:taste",
+    prediction.predictPurchase
+  );
 
 /* Kafka */
 kafkaConsumer.on("data", async function (message) {
@@ -43,7 +51,8 @@ kafkaConsumer.on("data", async function (message) {
 
   let { cityName, taste, quantity, date } = bufferObject;
   try {
-    let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } = await mySql.getCityByName(cityName);
+    let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } =
+      await mySql.getCityByName(cityName);
     let obj = {
       taste,
       quantity,

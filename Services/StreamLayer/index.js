@@ -1,7 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-// const server = require("http").createServer(app);
-// const io = require("socket.io")(server);
 require("dotenv").config();
 const controller = require("./controller/StreamLayer.Controller");
 const kafkaConsumer = require("./model/Kafka");
@@ -22,19 +20,10 @@ app
 
   .put("/api/reduceInventory", controller.reduceInventory)
   .put("/api/addInventory", controller.addInventory)
-  .get("/api/getStoreInventory", controller.getStoreInventory)
-  .get("/api/getAllInventory", controller.getAllInventory);
+  .get("/api/getStoreInventory/:cityName", controller.getStoreInventory)
+  .get("/api/getAllInventory", controller.getAllInventory)
+  .get("/api/getTastes", controller.getTastes);
 
-// io.on("connection", async (client) => {
-//     console.log("Client connected to socket");
-//     try {
-//         let calls_data = await db.redis.json.GET("calls_data");
-//         io.emit("calls", calls_data);
-//         console.log("calls data:", calls_data);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// });
 
 kafkaConsumer.on("data", async (message) => {
   console.log("got data");
@@ -44,8 +33,6 @@ kafkaConsumer.on("data", async (message) => {
   let { cityName, taste, quantity, date } = bufferObject;
   try {
     db.reduceInventory(cityName,taste,quantity);    
-  //   io.emit("calls", calls_data);
-  //   io.emit("last_call", new_Call);
   } catch (error) {
     console.log(error);
   }

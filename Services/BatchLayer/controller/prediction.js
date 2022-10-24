@@ -33,9 +33,10 @@ const predictWeekPurchases = async (req, res) => {
   let date = new Date();
   let changingDate = new Date(date.getTime());
 
-  let { cityName, taste } = req.body;
-  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } =
-    await getCityByName(cityName);
+  let { cityName, taste } = req.params;
+
+  
+  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } = await getCityByName(cityName);
 
   let arr = [];
 
@@ -67,7 +68,7 @@ const predictWeekPurchases = async (req, res) => {
 const predictPurchase = async (req, res) => {
   const dt = await buildeModel();
 
-  let { cityName, taste, date } = req.body;
+  let { cityName, taste, date } = req.params;
   let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } = await getCityByName(cityName);
 
 

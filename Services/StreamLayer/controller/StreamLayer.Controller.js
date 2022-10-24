@@ -2,7 +2,7 @@ const db = require("../model/redis");
 const mySql = require("../../BatchLayer/model/mySql");
 
 const reduceInventory = async (req, res) => {
-  const { cityName , taste , quantity } = req.body;
+  const { cityName, taste, quantity } = req.body;
   try {
     const value = await db.get(cityName);
     value[taste] -= +quantity;
@@ -15,7 +15,7 @@ const reduceInventory = async (req, res) => {
 };
 
 const addInventory = async (req, res) => {
-  const { cityName , taste , quantity } = req.body;
+  const { cityName, taste, quantity } = req.body;
   try {
     const value = await db.get(cityName);
     value[taste] += +quantity;
@@ -28,10 +28,9 @@ const addInventory = async (req, res) => {
 };
 
 const getStoreInventory = async (req, res) => {
-  let { cityName} = req.body;
+  let { cityName } = req.params;
   try {
     const value = await db.get(cityName);
-    console.log(value);
     res.status(200).send(value);
   } catch (error) {
     res.status(400).send("error");
@@ -41,18 +40,22 @@ const getStoreInventory = async (req, res) => {
 
 const getAllInventory = async (req, res) => {
   let stores;
-  let Chocolate = 0,Vanilla = 0,Strawberry = 0,Lemon = 0,Halva = 0
+  let Chocolate = 0,
+    Vanilla = 0,
+    Strawberry = 0,
+    Lemon = 0,
+    Halva = 0;
   let sql = `SELECT cityName FROM storesdb.stores_info;`;
   try {
-      stores = await mySql.executeQuery(sql)
-      for(const store of stores){
-        let element = await db.get(`${store.cityName}`);
-        Chocolate += element.Chocolate;
-        Vanilla += element.Vanilla;
-        Strawberry += element.Strawberry;
-        Lemon += element.Lemon;
-        Halva += element.Halva;
-      }
+    stores = await mySql.executeQuery(sql);
+    for (const store of stores) {
+      let element = await db.get(`${store.cityName}`);
+      Chocolate += element.Chocolate;
+      Vanilla += element.Vanilla;
+      Strawberry += element.Strawberry;
+      Lemon += element.Lemon;
+      Halva += element.Halva;
+    }
 
     const obj = {
       totalChocolate: Chocolate,
@@ -68,9 +71,17 @@ const getAllInventory = async (req, res) => {
   }
 };
 
+const getTastes = async (req, res) => {
+  const value = await db.get("אשדוד");
+  const tastes = Object.keys(value);
+  if (tastes) res.status(200).send(tastes);
+  else res.status(400).send("error");
+};
+
 module.exports = {
   reduceInventory,
   addInventory,
   getStoreInventory,
-  getAllInventory
+  getAllInventory,
+  getTastes,
 };

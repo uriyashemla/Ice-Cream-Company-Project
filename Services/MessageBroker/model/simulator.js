@@ -27,9 +27,15 @@ const generatePurchase = async () => {
       
       return  reject(`error with redis: ${error}`);
     }
-    
     const randomTaste = Math.floor(Math.random() * tastes.length);
-    const randomQuantity = Math.floor(Math.random() * 10) + 1;
+    const randomize = Math.floor(Math.random() * 10) + 1;
+    let randomQuantity;
+    if(randomize == 1){
+      randomQuantity = 0.5;
+    }
+    else{
+      randomQuantity = Math.floor(Math.random() * 10) + 1;
+    }
     
     if (quantity[randomTaste] >= randomQuantity) {
       
