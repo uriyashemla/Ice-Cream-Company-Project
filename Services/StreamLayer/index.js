@@ -44,5 +44,11 @@ app.listen(PORT, () =>
   console.log(`StreamLayer listening at http://localhost:${PORT}`)
 );
 
-createSqlConnection();
-db.createRedisConnection();
+const startConnetions = async () => {
+  try {
+    await createSqlConnection();
+    await db.createRedisConnection();
+  } catch (error) {}
+};
+
+startConnetions();

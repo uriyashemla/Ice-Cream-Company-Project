@@ -1,5 +1,11 @@
-.\Services\StreamLayer\start.bat
+cd Services\StreamLayer\
+start Start.bat
 
-START .\Services\BatchLayer\start.bat
+cd ..\BatchLayer\
+start Start.bat
 
-START .\Services\MessageBroker\start.bat
+cd ..\MessageBroker\
+start Start.bat
+
+cd ..\..\ice-cream-react
+yarn start

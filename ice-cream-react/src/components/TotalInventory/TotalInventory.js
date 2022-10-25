@@ -1,11 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { CChart } from "@coreui/react-chartjs";
 
-export default ({ inventoryData, tastes }) => {
+export default ({ inventoryData, tastes, callback }) => {
+  const [enableAnimation, setEnableAnimation] = useState(true);
 
   useEffect(() => {
-    
-    return () => {}
+    callback(true);
+    let timer = setTimeout(() => {
+      setEnableAnimation(false);
+
+      clearTimeout(timer);
+    }, 1000);
+    return () => {
+      callback(false);
+    };
   }, []);
 
   return (
@@ -27,7 +35,21 @@ export default ({ inventoryData, tastes }) => {
           justifyContent: "center",
         }}
       >
-        <span >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent:"space-between",
+            marginTop:100,
+          }}
+        >
+          {Object.entries(inventoryData).map((taste) => {
+            return <label>{taste[0]}: {taste[1]}</label>;
+          })}
+        </div>
+        {/* <label>{JSON.stringify(inventoryData)}</label> */}
+
+        <span>
           <CChart
             style={{ height: "25vh" }}
             type="pie"
@@ -48,7 +70,7 @@ export default ({ inventoryData, tastes }) => {
                     "rgba(201, 203, 207, 1)",
                   ],
                   label: "Quantity",
-
+                  animation: enableAnimation ? {} : false,
                   data: inventoryData ? Object.values(inventoryData) : [],
                 },
               ],

@@ -15,6 +15,7 @@ export default ({ data, callback }) => {
   return options[0] ? (
     <span style={{ backgroundColor: "black", color: "black" }}>
       <Select
+
         theme={(theme) => ({
           ...theme,
           borderRadius: 0,

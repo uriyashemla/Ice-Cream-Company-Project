@@ -6,7 +6,12 @@ const getHoliday = require("../webServices/getHoliday");
 const getWeather = require("../webServices/getWeather");
 
 const buildeModel = async () => {
-  const trainingData = await getAllPurchases();
+  let trainingData;
+  try {
+    trainingData = await getAllPurchases();
+  } catch (error) {
+    return
+  }
   const className = "quantity";
   const features = [
     "cityName",
@@ -34,9 +39,15 @@ const predictWeekPurchases = async (req, res) => {
   let changingDate = new Date(date.getTime());
 
   let { cityName, taste } = req.params;
-
-  
-  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } = await getCityByName(cityName);
+  let cityInfo;
+  try {
+    cityInfo = await getCityByName(cityName);
+  } catch (error) {
+    console.log("error fetching city name: " + error);
+    return res.status(400).send("error fetching city name");
+  }
+  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } =
+    cityInfo;
 
   let arr = [];
 
@@ -69,8 +80,8 @@ const predictPurchase = async (req, res) => {
   const dt = await buildeModel();
 
   let { cityName, taste, date } = req.params;
-  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } = await getCityByName(cityName);
-
+  let { cityType, toddlers, kids, adolescent, adults, middleAge, seniors } =
+    await getCityByName(cityName);
 
   let theDate = new Date(date);
 

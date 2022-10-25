@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectList from "../SelectList/SelectList";
 import { CChart } from "@coreui/react-chartjs";
 import { getStoreInventory } from "../../api/streamLayer";
@@ -8,7 +8,9 @@ export default ({ cities, tastes }) => {
   const [selectedStoreData, setSelectedStoreData] = useState(null);
   const [selectedTastePrediction, setSelectedTastePrediction] = useState(null);
   const [city, setCity] = useState(null);
+  const [selectedTaste, setSelectedTaste] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [enableAnimation, setEnableAnimation] = useState(true);
 
   const getStoreData = async (cityName) => {
     setLoading(true);
@@ -18,6 +20,7 @@ export default ({ cities, tastes }) => {
       let data = await getStoreInventory(cityName);
       setSelectedStoreData(data);
       setLoading(false);
+      if (selectedTaste) getWeekPredictionData(selectedTaste);
     } catch (error) {
       alert(error);
       setLoading(false);
@@ -25,6 +28,7 @@ export default ({ cities, tastes }) => {
   };
 
   const getWeekPredictionData = async (taste) => {
+    setSelectedTaste(taste);
     setLoading(true);
     setSelectedTastePrediction(null);
 
@@ -50,6 +54,27 @@ export default ({ cities, tastes }) => {
     return arr;
   };
 
+  useEffect(() => {
+    let timer = setInterval(async () => {
+      // alert(city)
+      if (city) {
+        setSelectedStoreData(await getStoreInventory(city));
+              setEnableAnimation(false);
+
+      }
+    }, 3000);
+
+
+
+    return () => clearInterval(timer);
+  }, [city]);
+
+  
+  useEffect(() => {
+
+    return () => {};
+  }, []);
+
   return (
     <div
       style={{
@@ -65,36 +90,24 @@ export default ({ cities, tastes }) => {
           justifyContent: "space-evenly",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            marginTop:"70px"
-          }}
-        >
-          <label>
-            Select Store:
+        <label style={{ marginTop: 40 }}>
+          Select Store:
+          <SelectList data={cities} callback={(cb) => getStoreData(cb.value)} />
+        </label>
+        <label style={{ marginTop: 40 }}>
+          Select Taste:
+          {selectedStoreData ? (
             <SelectList
-              data={cities}
-              callback={(cb) => getStoreData(cb.value)}
+              data={tastes}
+              callback={(cb) => getWeekPredictionData(cb.value)}
             />
-          </label>
-          <label>
-            Select Taste:
-            {selectedStoreData ? (
-              <SelectList
-                data={tastes}
-                callback={(cb) => getWeekPredictionData(cb.value)}
-              />
-            ) : (
-              <>
-                <br />
-                <label>Choose city first...</label>
-              </>
-            )}
-          </label>
-        </div>
+          ) : (
+            <>
+              <br />
+              <label>Choose city first...</label>
+            </>
+          )}
+        </label>
       </div>
 
       <div
@@ -129,7 +142,7 @@ export default ({ cities, tastes }) => {
                   data: selectedStoreData
                     ? Object.values(selectedStoreData)
                     : [],
-                  animation: false,
+                  animation: enableAnimation ? {} : false,
                 },
               ],
             }}
@@ -148,8 +161,8 @@ export default ({ cities, tastes }) => {
                   data: selectedTastePrediction
                     ? Object.values(selectedTastePrediction)
                     : [],
-                  animation: false,
-                },
+                    animation: enableAnimation ? {} : false,
+                  },
               ],
             }}
             labels="tastes"

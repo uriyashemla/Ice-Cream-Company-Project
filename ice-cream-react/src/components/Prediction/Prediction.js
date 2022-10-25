@@ -30,7 +30,7 @@ export default ({ cities, tastes }) => {
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-evenly",
-          marginTop:"150px"
+          marginTop:"120px"
         }}
       >
         <label>

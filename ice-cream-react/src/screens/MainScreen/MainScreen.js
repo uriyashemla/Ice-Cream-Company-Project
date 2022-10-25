@@ -16,6 +16,7 @@ export default () => {
   const [allCities, setAllCities] = useState("");
   const [allTastes, setAllTastes] = useState("");
   const [allInventory, setAllInventory] = useState(null);
+  const [totalInventoryTimer, setTotalInventoryTimer] = useState(false);
 
   const fetchAllData = async () => {
     try {
@@ -28,6 +29,15 @@ export default () => {
   useEffect(() => {
     fetchAllData();
   }, []);
+
+  useEffect(() => {
+    let timer = setInterval(async () => {
+      try {
+        if (totalInventoryTimer) setAllInventory(await getAllInventory());
+      } catch (error) {}
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [totalInventoryTimer]);
 
   return (
     <div>
@@ -46,7 +56,11 @@ export default () => {
           )}
         </TabPanel>
         <TabPanel>
-          <TotalInventory inventoryData={allInventory} tastes={allTastes} />
+          <TotalInventory
+            inventoryData={allInventory}
+            tastes={allTastes}
+            callback={setTotalInventoryTimer}
+          />
         </TabPanel>
         <TabPanel>
           {allCities[0] && allTastes[0] ? (

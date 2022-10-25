@@ -27,5 +27,11 @@ app.listen(PORT, () => {
   console.log(`Messege Broker listening at http://localhost:${PORT}`);
 });
 
-createSqlConnection();
-createRedisConnection();
+const startConnetions = async () => {
+  try {
+    await createSqlConnection();
+    await createRedisConnection();
+  } catch (error) {}
+};
+
+startConnetions();

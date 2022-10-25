@@ -92,6 +92,14 @@ app.listen(PORT, () => {
   console.log(`Batch Layer listening at http://localhost:${PORT}`);
 });
 
-mongo.createMongoConnection();
-mongoose.createMongooseConnection();
-mySql.createSqlConnection();
+
+const startConnetions = async () => {
+  try {
+    await mongo.createMongoConnection();
+    await mongoose.createMongooseConnection();
+    await mySql.createSqlConnection();    
+  } catch (error) {}
+};
+
+startConnetions();
+
