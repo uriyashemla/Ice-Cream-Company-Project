@@ -43,7 +43,7 @@ export default ({ cities, tastes }) => {
     let date = new Date();
     let changingDate = new Date(date.getTime());
 
-    for (let index = 0; index <= 6; index++) {
+    for (let index = 0; index < 7; index++) {
       changingDate.setDate(date.getDate() + index);
       arr.push(changingDate.toLocaleDateString("en-CA"));
     }
@@ -65,24 +65,36 @@ export default ({ cities, tastes }) => {
           justifyContent: "space-evenly",
         }}
       >
-        <label>
-          Select Store:
-          <SelectList data={cities} callback={(cb) => getStoreData(cb.value)} />
-        </label>
-        <label>
-          Select Taste:
-          {selectedStoreData ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            marginTop:"70px"
+          }}
+        >
+          <label>
+            Select Store:
             <SelectList
-              data={tastes}
-              callback={(cb) => getWeekPredictionData(cb.value)}
+              data={cities}
+              callback={(cb) => getStoreData(cb.value)}
             />
-          ) : (
-            <>
-              <br />
-              <label>Choose city first...</label>
-            </>
-          )}
-        </label>
+          </label>
+          <label>
+            Select Taste:
+            {selectedStoreData ? (
+              <SelectList
+                data={tastes}
+                callback={(cb) => getWeekPredictionData(cb.value)}
+              />
+            ) : (
+              <>
+                <br />
+                <label>Choose city first...</label>
+              </>
+            )}
+          </label>
+        </div>
       </div>
 
       <div
@@ -91,7 +103,7 @@ export default ({ cities, tastes }) => {
           flexDirection: "row",
           margin: "50px",
           justifyContent: "space-evenly",
-          height:"200px"
+          height: "200px",
         }}
       >
         <span style={{ backgroundColor: "white", color: "black" }}>
@@ -117,6 +129,7 @@ export default ({ cities, tastes }) => {
                   data: selectedStoreData
                     ? Object.values(selectedStoreData)
                     : [],
+                  animation: false,
                 },
               ],
             }}
@@ -135,6 +148,7 @@ export default ({ cities, tastes }) => {
                   data: selectedTastePrediction
                     ? Object.values(selectedTastePrediction)
                     : [],
+                  animation: false,
                 },
               ],
             }}

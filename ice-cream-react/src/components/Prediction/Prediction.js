@@ -20,7 +20,7 @@ export default ({ cities, tastes }) => {
         backgroundColor: "rgba(94,29,84,0.85)",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-evenly",
+        justifyContent: "flex-start",
         height: "63vh",
         color: "white",
       }}
@@ -29,16 +29,17 @@ export default ({ cities, tastes }) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "center",
           justifyContent: "space-evenly",
+          marginTop:"150px"
         }}
       >
         <label>
           Select Store:
           <SelectList
             data={cities}
-            callback={(cb) =>
-              setPredictionRequest({ ...prdictionRequest, cityName: cb.value })
+            callback={(cb) =>{
+              setPredictionRequest({ ...prdictionRequest, cityName: cb.value });
+              setPredictionData(null);}
             }
           />
         </label>
@@ -47,23 +48,27 @@ export default ({ cities, tastes }) => {
           Select Taste:
           <SelectList
             data={tastes}
-            callback={(cb) =>
-              setPredictionRequest({ ...prdictionRequest, taste: cb.value })
-            }
+            callback={(cb) =>{
+              setPredictionRequest({ ...prdictionRequest, taste: cb.value });
+              setPredictionData(null);
+            }}
           />
         </label>
 
-        <label>
+        <div>
+          <label>
           Select Date:
+          </label>
           <br />
           <DatePicker
             selected={startDate}
             onChange={(date) => {
+              setPredictionData(null);
               setStartDate(date);
               setPredictionRequest({ ...prdictionRequest, date });
             }}
           />
-        </label>
+        </div>
 
         <button
           style={{ borderRadius: "5px" }}
@@ -80,7 +85,8 @@ export default ({ cities, tastes }) => {
         </button>
       </div>
       {predictionData ? (
-        <h3>
+        <h2>
+          <br/>
           שם עיר: {prdictionRequest.cityName}
           <br/>
           סוג האוכלוסיה בעיר: {cityData.cityType} 
@@ -91,7 +97,7 @@ export default ({ cities, tastes }) => {
           בתאריך: {new Date(prdictionRequest.date).toLocaleDateString("en-ca")} עונה: {cityData.season}, מזג האוויר: {cityData.weather},  חג: {cityData.holiday}
           <br/>
           חיזוי הקניה לטעם {cityData.taste} היא {predictionData} ק"ג
-        </h3>
+        </h2>
       ) : (
         <></>
       )}
